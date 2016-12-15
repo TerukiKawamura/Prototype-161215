@@ -28,7 +28,7 @@ Get the Channel access token and Channel secret from the Channel Console.
 
 Tap the deploy button.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/line/line-bot-sdk-java)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TerukiKawamura/line-bot-sdk-java)
 
 ### Step 3
 
