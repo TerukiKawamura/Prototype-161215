@@ -38,43 +38,42 @@ public class EchoApplication {
         SpringApplication.run(EchoApplication.class, args);
     }
 
-    private String[] week_name = {"日曜日", "月曜日", "火曜日", "水曜日", 
-            "木曜日", "金曜日", "土曜日"};
+//    private String[] week_name = {"日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"};
 
     @EventMapping
     public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
         System.out.println("event: " + event);
         
-        String responseMessage = "";
+        String responseMessage = "あいうえお";
         
-        if (event.getMessage() != null &&  event.getMessage().getText() != null) {
-        	
-        	String message = event.getMessage().getText();
-        	responseMessage = message;
-        	
-			Calendar calendar = Calendar.getInstance(Locale.JAPAN);
-			//int year = calendar.get(Calendar.YEAR);
-			//int month = calendar.get(Calendar.MONTH) + 1;
-			//int day = calendar.get(Calendar.DATE);
-			//int hour = calendar.get(Calendar.HOUR_OF_DAY);
-			//int minute = calendar.get(Calendar.MINUTE);
-			//int second = calendar.get(Calendar.SECOND);
-		    int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-
-        	if (message.contains("今日は"))
-        	{
-        		if (message.contains("何曜"))
-        		{
-        			responseMessage = week_name[week] + "です";
-        		}
-        	} else if (message.contains("次")) {
-        		if (message.contains("予約")) {
-        			calendar.add(Calendar.DATE, 10);
-        			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        			responseMessage = sdf.format(calendar.getTime()) + "の15時です";
-        		}
-        	}
-        }
+//        if (event.getMessage() != null &&  event.getMessage().getText() != null) {
+//        	
+//        	String message = event.getMessage().getText();
+//        	responseMessage = message;
+//        	
+//			Calendar calendar = Calendar.getInstance(Locale.JAPAN);
+//			//int year = calendar.get(Calendar.YEAR);
+//			//int month = calendar.get(Calendar.MONTH) + 1;
+//			//int day = calendar.get(Calendar.DATE);
+//			//int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//			//int minute = calendar.get(Calendar.MINUTE);
+//			//int second = calendar.get(Calendar.SECOND);
+//		    int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+//
+//        	if (message.contains("今日"))
+//        	{
+//        		if (message.contains("何曜"))
+//        		{
+//        			responseMessage = week_name[week] + "です";
+//        		}
+//        	} else if (message.contains("次")) {
+//        		if (message.contains("予約")) {
+//        			calendar.add(Calendar.DATE, 10);
+//        			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+//        			responseMessage = sdf.format(calendar.getTime()) + "の15時です";
+//        		}
+//        	}
+//        }
         
         return new TextMessage(responseMessage);
     }
