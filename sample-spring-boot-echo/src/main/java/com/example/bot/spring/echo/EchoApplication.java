@@ -57,7 +57,7 @@ public class EchoApplication {
 			//int day = calendar.get(Calendar.DATE);
 			int hour = calendar.get(Calendar.HOUR_OF_DAY);
 			//int minute = calendar.get(Calendar.MINUTE);
-			//int second = calendar.get(Calendar.SECOND);
+			int second = calendar.get(Calendar.SECOND);
 		    int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
         	if (message.contains("今日")) {
@@ -66,9 +66,13 @@ public class EchoApplication {
         		} else if (message.contains("何日")) {
         			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         			responseMessage = String.format("%sです", sdf.format(calendar.getTime()));
+        		} else if (message.contains("天気")) {
+        			responseMessage = String.format("%sです", weather_name[week]);
         		}
         	} else if (message.contains("明日")) {
-
+        		if (message.contains("天気")) {
+        			responseMessage = String.format("%sです", weather_name[week + 1 % 7]);
+        		}
     		} else if (message.contains("次")) {
 	    		if (message.contains("予約")) {
 	    			calendar.add(Calendar.DATE, 10);
@@ -80,6 +84,8 @@ public class EchoApplication {
         			responseMessage = String.format("%sです", weather_name[week]);
         		} else if (message.contains("ここはどこ")) {
         			responseMessage = "地球です";
+        		} else if (second % 2 == 0) {
+        			responseMessage = "Sorry. I can't understand what you said.";
         		}
     		}
         }
