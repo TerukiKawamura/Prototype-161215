@@ -70,15 +70,21 @@ public class EchoApplication {
         		
     		} else if (message.contains("次")) {
 	    		if (message.contains("予約")) {
-	    			calendar.add(Calendar.DATE, 10);
-	    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+	    			calendar.add(Calendar.DAY_OF_MONTH, 10);
+	    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
 	    			responseMessage = String.format("%sの%d時です", sdf.format(calendar.getTime()), hour + 2 % 24);
 	    		}
     		} else {
         		if (message.contains("ここはどこ")) {
         			responseMessage = "地球です";
+        			
+        		} else if (message.contains("何時")) {
+	    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日 H:mm");
+            		responseMessage = String.format("%sです", sdf.format(calendar.getTime()));
+            			
         		} else if (second % 2 == 0) {
         			responseMessage = "Sorry. I can't understand what you said.";
+        			
         		}
     		}
         }
