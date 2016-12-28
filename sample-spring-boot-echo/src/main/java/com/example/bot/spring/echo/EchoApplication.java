@@ -16,9 +16,8 @@
 
 package com.example.bot.spring.echo;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.TimeZone;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,10 +34,11 @@ import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 public class EchoApplication {
     public static void main(String[] args) {
         SpringApplication.run(EchoApplication.class, args);
+
     }
 
-    private String[] week_name = {"日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"};
-    private String[] weather_name = {"晴れ", "晴れのち雨", "雨", "くもり", "くもりのち晴れ", "雪", "雨のち晴れ"};
+    private static String[] week_name = {"日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"};
+    private static String[] weather_name = {"晴れ", "晴れのち雨", "雨", "くもり", "くもりのち晴れ", "雪", "雨のち晴れ"};
 
     @EventMapping
     public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
@@ -51,12 +51,9 @@ public class EchoApplication {
         	String message = event.getMessage().getText();
         	responseMessage = message;
         	
-			Calendar calendar = Calendar.getInstance(Locale.JAPAN);
-			//int year = calendar.get(Calendar.YEAR);
-			//int month = calendar.get(Calendar.MONTH) + 1;
-			//int day = calendar.get(Calendar.DATE);
-			int hour = calendar.get(Calendar.HOUR_OF_DAY);
-			//int minute = calendar.get(Calendar.MINUTE);
+        	TimeZone tz = TimeZone.getTimeZone("Asia/Tokyo");
+			Calendar calendar = Calendar.getInstance(tz);
+			
 			int second = calendar.get(Calendar.SECOND);
 
         	if (message.contains("今日") || message.contains("きょう")) {
@@ -71,16 +68,17 @@ public class EchoApplication {
     		} else if (message.contains("次")) {
 	    		if (message.contains("予約")) {
 	    			calendar.add(Calendar.DAY_OF_MONTH, 10);
-	    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日");
-	    			responseMessage = String.format("%sの%d時です", sdf.format(calendar.getTime()), hour + 2 % 24);
+	    			calendar.add(Calendar.HOUR_OF_DAY, -4);
+	    			responseMessage = getDatetimeResponseMessage(calendar);
+	    			
 	    		}
     		} else {
         		if (message.contains("ここはどこ")) {
         			responseMessage = "地球です";
         			
         		} else if (message.contains("何時")) {
-	    			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日 H:mm");
-            		responseMessage = String.format("%sです", sdf.format(calendar.getTime()));
+        			
+	    			responseMessage = getDatetimeResponseMessage(calendar);
             			
         		} else if (second % 2 == 0) {
         			responseMessage = "Sorry. I can't understand what you said.";
@@ -97,7 +95,7 @@ public class EchoApplication {
         System.out.println("event: " + event);
     }
     
-    private String getDailyResponseMessage(String message, Calendar calendar, int daysAfterToday) {
+    private static String getDailyResponseMessage(String message, Calendar calendar, int daysAfterToday) {
     	
     	String responseMessage = message;
     	
@@ -106,13 +104,31 @@ public class EchoApplication {
     	
 		if (message.contains("何曜")) {
 			responseMessage = String.format("%sです", week_name[week]);
+			
 		} else if (message.contains("何日") || message.contains("日付")) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-			responseMessage = String.format("%sです", sdf.format(calendar.getTime()));
+			int year = calendar.get(Calendar.YEAR);
+			int month = calendar.get(Calendar.MONTH) + 1;
+			int day = calendar.get(Calendar.DATE);
+
+			responseMessage = String.format("%d年%d月%d日 です", year, month, day);
+    			
 		} else if (message.contains("天気")) {
 			responseMessage = String.format("%sです", weather_name[week]);
+			
 		}
 		
+		return responseMessage;
+    }
+    
+    private static String getDatetimeResponseMessage(Calendar calendar) {
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH) + 1;
+		int day = calendar.get(Calendar.DATE);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+
+		String responseMessage = String.format("%d年%d月%d日 %d:%d です", year, month, day, hour, minute);
+    	
 		return responseMessage;
     }
 }
