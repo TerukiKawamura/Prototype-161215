@@ -54,8 +54,6 @@ public class EchoApplication {
         	TimeZone tz = TimeZone.getTimeZone("Asia/Tokyo");
 			Calendar calendar = Calendar.getInstance(tz);
 			
-			int second = calendar.get(Calendar.SECOND);
-
         	if (message.contains("今日") || message.contains("きょう")) {
         		responseMessage = getDailyResponseMessage(message, calendar, 0);
         		
@@ -74,13 +72,15 @@ public class EchoApplication {
 	    		}
     		} else {
         		if (message.contains("ここはどこ")) {
+        			
         			responseMessage = "地球です";
         			
         		} else if (message.contains("何時")) {
         			
 	    			responseMessage = getDatetimeResponseMessage(calendar);
             			
-        		} else if (second % 2 == 0) {
+        		} else {
+        			
         			responseMessage = "Sorry. I can't understand what you said.";
         			
         		}
