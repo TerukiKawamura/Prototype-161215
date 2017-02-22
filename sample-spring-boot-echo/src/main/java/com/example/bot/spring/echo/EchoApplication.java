@@ -39,7 +39,8 @@ public class EchoApplication {
 
     private static String[] week_name = {"日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"};
     private static String[] weather_name = {"晴れ", "晴れのち雨", "雨", "くもり", "くもりのち晴れ", "雪", "雨のち晴れ"};
-
+    private static String[] greeting = {"おはよう","こんにちは", "こんばんは", "おやすみ"};
+    
     @EventMapping
     public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
         System.out.println("event: " + event);
@@ -71,18 +72,25 @@ public class EchoApplication {
 	    			
 	    		}
     		} else {
-        		if (message.contains("ここはどこ")) {
-        			
-        			responseMessage = "地球です";
-        			
-        		} else if (message.contains("何時")) {
+    			if (message.contains("何時")) {
         			
 	    			responseMessage = getDatetimeResponseMessage(calendar);
             			
         		} else {
         			
-        			responseMessage = "Sorry. I can't understand what you said.";
+        			boolean isGreeting = false;
         			
+        			for (int i = 0; i < greeting.length; i++) {
+        				if (message.startsWith(greeting[i])) {
+        					responseMessage = message;
+        					isGreeting = true;
+        					break;
+        				}
+        			}
+        			
+        			if (isGreeting != true) {
+        				responseMessage = "Sorry. I can't understand what you said.";
+        			}
         		}
     		}
         }
